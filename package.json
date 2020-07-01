@@ -6,14 +6,21 @@
   "scripts": {
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
-    "start": "nodemon app.js"
+    "start": "nodemon --exec babel-node src/app.js"
   },
   "keywords": [],
   "author": "Ruslan Bulavka",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.10.3",
+    "@babel/core": "^7.10.3",
+    "@babel/node": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
     "eslint": "^7.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }

@@ -1,2 +1,10 @@
 // express app entry point
-console.log('Noice');
+
+import express from 'express';
+
+const app = express();
+const PORT = 3000;
+
+app.listen(PORT, () => {
+    console.log('Listening on port 3000');
+});
