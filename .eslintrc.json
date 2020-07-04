@@ -11,6 +11,7 @@
     },
     "rules": {
         "no-var": "error",
-        "indent": ["error", 4]
+        "indent": ["error", 4],
+        "prefer-destructuring": ["error", {"object": false, "array": true}]
     }
 }
