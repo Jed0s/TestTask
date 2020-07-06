@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const lectureSchema = new Schema({
-    lecture_theme: {
+    theme: {
         type: String,
         required: true,
     },
@@ -16,7 +16,7 @@ const lectureSchema = new Schema({
         type: Number,
         required: true,
     },
-    students: {
+    group: {
         type: Schema.Types.ObjectId,
         ref: 'Group',
         required: true,
@@ -25,7 +25,7 @@ const lectureSchema = new Schema({
         type: String,
         required: true,
     },
-    start_end: {
+    time: {
         type: String,
         required: true,
     },
