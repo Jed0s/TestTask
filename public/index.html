@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>Test-Task</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container pt-3">
+    <div class="container pt-3" id="start" v-cloak>
+<!--        <form class="input-group mb-3" @submit.prevent="addStudent">-->
+<!--            <input type="text" class="form-control" id="studentName" placeholder="Enter student's name"-->
+<!--                   v-model="userInput.studentName" required>-->
+<!--            <select class="custom-select" v-model="formInput.group" v-if="groups.length" required>-->
+<!--                <option v-for="group in groups" v-bind:value="group._id">{{ group.name }}</option>-->
+<!--            </select>-->
+<!--            <p v-else>Groups not found</p>-->
+<!--            <button type="submit" class="btn btn-primary btn-sm">Add student</button>-->
+<!--        </form>-->
+        <form class="input-group mb-3" @submit.prevent="makeGET">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary" type="submit">GET</button>
+            </div>
+            <input type="text" class="form-control" id="GETLectureID" placeholder="Leave it blank or enter ID lecture"
+                   v-model="userInput.GETLectureID">
+        </form>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary" type="button" v-on:click="isPutMethod = !isPutMethod">POST</button>
+            </div>
+            <input type="text" class="form-control" placeholder="Click button left on me">
+        </div>
+        <form @submit.prevent="createPostMethod" v-if="isPutMethod">
+            <div class="form-group">
+                <input type="text" class="form-control" id="theme" placeholder="Theme of lecture" v-model="formInput.theme" required>
+                <select class="custom-select" id="lecturer" v-model="formInput.lecturer" v-if="lecturers.length" required>
+                    <option disabled value="">Select lecturer</option>
+                    <option v-for="lecturer in lecturers" v-bind:value="lecturer._id">{{ lecturer.name }}</option>
+                </select>
+                <p v-else>Groups not found</p>
+                <input type="number" class="form-control" id="classroom" placeholder="Classroom" v-model="formInput.classroom">
+                <select class="custom-select" id="group" v-model="formInput.group" v-if="groups.length" required>
+                    <option disabled value="">Select group</option>
+                    <option v-for="group in groups" v-bind:value="group._id">{{ group.name }}</option>
+                </select>
+                <p v-else>Groups not found</p>
+                <select class="custom-select" id="day" v-model="formInput.day" required>
+                    <option disabled value="">Select day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+<!--                <input type="text" class="form-control" id="time" placeholder="Time(from : to)" v-model="formInput.time">-->
+                <select class="custom-select" id="time" v-model="formInput.time" required>
+                    <option disabled value="">Select time</option>
+                    <option value="8:00 - 9:20">8:00 - 9:20</option>
+                    <option value="9:30 - 10:50">9:30 - 10:50</option>
+                    <option value="11:10 - 12:30">11:10 - 12:30</option>
+                    <option value="12:40 - 14:00">12:40 - 14:00</option>
+                    <option value="14:10 - 15:30">14:10 - 15:30</option>
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">Make POST</button>
+            </div>
+        </form>
+        <div v-if="lecturesID.length">
+            <p>Available IDs:</p>
+            <div v-for="lecture in lecturesID">
+                <p>ID : {{ lecture._id }}</p>
+            </div>
+        </div>
+        <p v-else>Lecture IDs not found</p>
+        <p v-if="serverResponse">Response from server( http://localhost:3000{{ urlForAPI }} ):</p>
+        <p>{{ serverResponse }}</p>
+    </div>
+</div>
+<script type="module" src="easyfront.js"></script>
+</body>
+</html>
