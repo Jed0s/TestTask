@@ -1,5 +1,5 @@
 import express from 'express';
-import showLectures from '../controllers/lecturesController';
+import { createLecture, showLectures } from '../controllers/lectureController';
 
 const lectureRouter = express.Router();
 
@@ -12,7 +12,7 @@ lectureRouter.get('/:id', (req, res) => {
 });
 
 lectureRouter.post('/', (req, res) => {
-    // POST METHOD
+    createLecture(req, res); // POST METHOD
 });
 
 export default lectureRouter;
