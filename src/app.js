@@ -11,9 +11,10 @@ dotenv.config({ path: `${__dirname}/config/.env` });
 
 const app = express();
 app.use(express.static(path.resolve(__dirname, '../public')));
+app.use(express.json());
 app.use('/', routes);
 
 app.listen(process.env.PORT, () => {
-    console.log('Listening on port 3000');
-    console.log('You can do test right here: http://localhost:3000');
+    console.log(`Listening on port ${process.env.PORT}`);
+    console.log(`You can do test right here: http://localhost:${process.env.PORT}`);
 });
