@@ -51,4 +51,18 @@ function changeLecture(req, res) {
     });
 }
 
-export { createLecture, showLectures, changeLecture };
+function deleteLecture(req, res) {
+    console.log(req.body.id);
+    Lecture.findByIdAndDelete(req.body.id, (err, doc) => {
+        if (err) {
+            console.log(err);
+            res.status(500);
+        } else {
+            res.status(200).json(`Lecture with id '${req.body.id}' was deleted.`);
+        }
+    });
+}
+
+export {
+    createLecture, showLectures, changeLecture, deleteLecture,
+};

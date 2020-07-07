@@ -1,5 +1,7 @@
 import express from 'express';
-import { createLecture, showLectures, changeLecture } from '../controllers/lectureController';
+import {
+    createLecture, showLectures, changeLecture, deleteLecture,
+} from '../controllers/lectureController';
 
 const lectureRouter = express.Router();
 
@@ -17,6 +19,10 @@ lectureRouter.post('/', (req, res) => {
 
 lectureRouter.put('/:id', (req, res) => {
     changeLecture(req, res); // PUT METHOD
+});
+
+lectureRouter.delete('/:id', (req, res) => {
+    deleteLecture(req, res); // DELETE METHOD
 });
 
 export default lectureRouter;
