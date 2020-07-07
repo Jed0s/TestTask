@@ -26,9 +26,11 @@ new Vue({
     el: '#start',
     data: {
         name: 'vue.js',
+        isPostMethod: false,
         isPutMethod: false,
         userInput: {
             GETLectureID: '',
+            PUTLectureID: '',
             studentName: '',
         },
         formInput: {
@@ -45,6 +47,7 @@ new Vue({
         lecturers: [],
         groups: [],
         serverResponse: '',
+        //serverData: {},
     },
     methods: {
         makeGET() {
@@ -80,6 +83,45 @@ new Vue({
                     this.formInput.group = '';
                     this.formInput.day = '';
                     this.formInput.time = '';
+                })
+                .catch((err) => console.log(err));
+        },
+        changeIsPostMethod() { // RENAME THIS FUNCTION AFTER TESTS
+            this.isPostMethod = !this.isPostMethod;
+            this.isPutMethod = false;
+        },
+        async makePutMethod() {
+            this.isPostMethod = false;
+            if (this.userInput.PUTLectureID) {
+                this.serverResponse = '';
+                this.urlForAPI = `/api/lectures/${this.userInput.PUTLectureID}`;
+                request(this.urlForAPI)
+                    .then((res) => JSON.parse(JSON.stringify(res)))
+                    .then((data) => {
+                        if (data.reason) {
+                            this.serverResponse = 'Status code: 404';
+                        } else {
+                            this.formInput.theme = data.theme;
+                            console.log(data);
+                            this.formInput.lecturer = data.lecturer;
+                            this.formInput.classroom = data.classroom;
+                            this.formInput.group = data.group;
+                            this.formInput.day = data.day;
+                            this.formInput.time = data.time;
+                            this.isPutMethod = !this.isPutMethod;
+                        }
+                    })
+                    .catch((err) => console.log(err));
+            } else {
+                this.serverResponse = 'Please, enter lecture ID in PUT input.';
+            }
+        },
+        async updateLecture() {
+            const { ...lectureData } = this.formInput;
+            lectureData._id = this.userInput.PUTLectureID;
+            request(`/api/lectures/${this.userInput.PUTLectureID}`, 'PUT', lectureData)
+                .then(() => {
+                    this.serverResponse = 'Changed';
                 })
                 .catch((err) => console.log(err));
         },

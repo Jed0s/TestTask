@@ -34,11 +34,18 @@
         </form>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" type="button" v-on:click="isPutMethod = !isPutMethod">POST</button>
+                <button class="btn btn-outline-secondary" type="button" v-on:click="changeIsPostMethod">POST</button>
             </div>
             <input type="text" class="form-control" placeholder="Click button left on me">
         </div>
-        <form @submit.prevent="createPostMethod" v-if="isPutMethod">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary" type="button" v-on:click="makePutMethod">PUT</button>
+            </div>
+            <input type="text" class="form-control" placeholder="Enter ID lecture"
+                   v-model="userInput.PUTLectureID" required>
+        </div>
+        <form @submit.prevent="createPostMethod" v-if="isPostMethod">
             <div class="form-group">
                 <input type="text" class="form-control" id="theme" placeholder="Theme of lecture" v-model="formInput.theme" required>
                 <select class="custom-select" id="lecturer" v-model="formInput.lecturer" v-if="lecturers.length" required>
@@ -70,6 +77,40 @@
                     <option value="14:10 - 15:30">14:10 - 15:30</option>
                 </select>
                 <button type="submit" class="btn btn-primary btn-sm">Make POST</button>
+            </div>
+        </form>
+        <form @submit.prevent="updateLecture" v-if="isPutMethod">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Theme of lecture" v-model="formInput.theme" required>
+                <select class="custom-select" v-model="formInput.lecturer" v-if="lecturers.length" required>
+                    <option disabled value="">Select lecturer</option>
+                    <option v-for="lecturer in lecturers" v-bind:value="lecturer._id">{{ lecturer.name }}</option>
+                </select>
+                <p v-else>Groups not found</p>
+                <input type="number" class="form-control" placeholder="Classroom" v-model="formInput.classroom">
+                <select class="custom-select" v-model="formInput.group" v-if="groups.length" required>
+                    <option disabled value="">Select group</option>
+                    <option v-for="group in groups" v-bind:value="group._id">{{ group.name }}</option>
+                </select>
+                <p v-else>Groups not found</p>
+                <select class="custom-select" v-model="formInput.day" required>
+                    <option disabled value="">Select day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+                <!--                <input type="text" class="form-control" id="time" placeholder="Time(from : to)" v-model="formInput.time">-->
+                <select class="custom-select" v-model="formInput.time" required>
+                    <option disabled value="">Select time</option>
+                    <option value="8:00 - 9:20">8:00 - 9:20</option>
+                    <option value="9:30 - 10:50">9:30 - 10:50</option>
+                    <option value="11:10 - 12:30">11:10 - 12:30</option>
+                    <option value="12:40 - 14:00">12:40 - 14:00</option>
+                    <option value="14:10 - 15:30">14:10 - 15:30</option>
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">Make PUT</button>
             </div>
         </form>
         <div v-if="lecturesID.length">
