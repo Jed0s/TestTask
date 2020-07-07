@@ -10,7 +10,13 @@ function showLectures(req, res, isIdTyped = false) {
             .catch((err) => res.json(err));
     } else {
         Lecture.findById(req.params.id)
-            .then((data) => res.json(data))
+            .then((data) => {
+                if (data == null) {
+                    res.status(400).json('Lecture with current ID not found.');
+                } else {
+                    res.status(200).json(data);
+                }
+            })
             .catch((err) => { res.status(404).json(err); });
     }
 }
@@ -34,7 +40,7 @@ function createLecture(req, res) {
 }
 
 function changeLecture(req, res) {
-    Lecture.findByIdAndUpdate(req.body._id, {
+    Lecture.findByIdAndUpdate(req.body.id, {
         theme: req.body.theme,
         lecturer: req.body.lecturer,
         classroom: req.body.classroom,

@@ -15,17 +15,8 @@
 </head>
 <body>
 <div class="container pt-3">
-    <div class="container pt-3" id="start" v-cloak>
-<!--        <form class="input-group mb-3" @submit.prevent="addStudent">-->
-<!--            <input type="text" class="form-control" id="studentName" placeholder="Enter student's name"-->
-<!--                   v-model="userInput.studentName" required>-->
-<!--            <select class="custom-select" v-model="formInput.group" v-if="groups.length" required>-->
-<!--                <option v-for="group in groups" v-bind:value="group._id">{{ group.name }}</option>-->
-<!--            </select>-->
-<!--            <p v-else>Groups not found</p>-->
-<!--            <button type="submit" class="btn btn-primary btn-sm">Add student</button>-->
-<!--        </form>-->
-        <form class="input-group mb-3" @submit.prevent="makeGET">
+    <div class="container pt-3" id="root" v-cloak>
+        <form class="input-group mb-3" @submit.prevent="showLecture">
             <div class="input-group-prepend">
                 <button class="btn btn-outline-secondary" type="submit">GET</button>
             </div>
@@ -34,25 +25,11 @@
         </form>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" type="button" v-on:click="changeIsPostMethod">POST</button>
+                <button class="btn btn-outline-secondary" type="button" v-on:click="handlePOST">POST</button>
             </div>
-            <input type="text" class="form-control" placeholder="Click button left on me">
+            <input type="text" class="form-control" placeholder="Click button left on me" readonly>
         </div>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" type="button" v-on:click="makePutMethod">PUT</button>
-            </div>
-            <input type="text" class="form-control" placeholder="Enter ID lecture"
-                   v-model="userInput.PUTLectureID" required>
-        </div>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" type="button" v-on:click="makeDeleteMethod">DELETE</button>
-            </div>
-            <input type="text" class="form-control" placeholder="Enter ID lecture"
-                   v-model="userInput.DELETELectureID" required>
-        </div>
-        <form @submit.prevent="createPostMethod" v-if="isPostMethod">
+        <form @submit.prevent="createLecture" v-if="isPostMethod">
             <div class="form-group">
                 <input type="text" class="form-control" id="theme" placeholder="Theme of lecture" v-model="formInput.theme" required>
                 <select class="custom-select" id="lecturer" v-model="formInput.lecturer" v-if="lecturers.length" required>
@@ -74,7 +51,6 @@
                     <option value="Thursday">Thursday</option>
                     <option value="Friday">Friday</option>
                 </select>
-<!--                <input type="text" class="form-control" id="time" placeholder="Time(from : to)" v-model="formInput.time">-->
                 <select class="custom-select" id="time" v-model="formInput.time" required>
                     <option disabled value="">Select time</option>
                     <option value="8:00 - 9:20">8:00 - 9:20</option>
@@ -83,9 +59,16 @@
                     <option value="12:40 - 14:00">12:40 - 14:00</option>
                     <option value="14:10 - 15:30">14:10 - 15:30</option>
                 </select>
-                <button type="submit" class="btn btn-primary btn-sm">Make POST</button>
+                <button type="submit" class="btn btn-primary btn-sm">Create lecture</button>
             </div>
         </form>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary" type="button" v-on:click="handlePUT">PUT</button>
+            </div>
+            <input type="text" class="form-control" placeholder="Enter ID lecture"
+                   v-model="userInput.PUTLectureID" required>
+        </div>
         <form @submit.prevent="updateLecture" v-if="isPutMethod">
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Theme of lecture" v-model="formInput.theme" required>
@@ -108,7 +91,6 @@
                     <option value="Thursday">Thursday</option>
                     <option value="Friday">Friday</option>
                 </select>
-                <!--                <input type="text" class="form-control" id="time" placeholder="Time(from : to)" v-model="formInput.time">-->
                 <select class="custom-select" v-model="formInput.time" required>
                     <option disabled value="">Select time</option>
                     <option value="8:00 - 9:20">8:00 - 9:20</option>
@@ -117,9 +99,17 @@
                     <option value="12:40 - 14:00">12:40 - 14:00</option>
                     <option value="14:10 - 15:30">14:10 - 15:30</option>
                 </select>
-                <button type="submit" class="btn btn-primary btn-sm">Make PUT</button>
+                <button type="submit" class="btn btn-primary btn-sm">Change lecture</button>
             </div>
         </form>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary" type="button" v-on:click="deleteLecture">DELETE</button>
+            </div>
+            <input type="text" class="form-control" placeholder="Enter ID lecture"
+                   v-model="userInput.DELETELectureID" required>
+        </div>
+        <hr>
         <div v-if="lecturesID.length">
             <p>Available IDs:</p>
             <div v-for="lecture in lecturesID">
@@ -127,8 +117,18 @@
             </div>
         </div>
         <p v-else>Lecture IDs not found</p>
-        <p v-if="serverResponse">Response from server( http://localhost:3000{{ urlForAPI }} ):</p>
-        <p>{{ serverResponse }}</p>
+        <hr>
+        <p v-if="URL">Response from server( http://localhost:3000{{ URL }} ):</p>
+        <div v-if="serverResponse">
+            <p>{{ serverResponse }}</p>
+        </div>
+        <div v-else>
+            <div v-if="serverResponseArray">
+                <div v-if="!serverResponse">
+                    <p v-for="lecture in serverResponseArray">{{lecture}}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script type="module" src="easyfront.js"></script>

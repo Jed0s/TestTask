@@ -2,3 +2,4 @@
 package-lock.json
 .idea
 /src/dev.js
+/src/dev.html
