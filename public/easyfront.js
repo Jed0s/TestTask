@@ -6,10 +6,8 @@ async function request(url, method = 'GET', data = null) {
         let body;
         const headers = {};
         if (data) {
-            console.log(`Data: ${data}`);
             headers['Content-Type'] = 'application/json';
             body = JSON.stringify(data);
-            console.log(`Data: ${body}`);
         }
         const response = await fetch(url, {
             method,
@@ -91,6 +89,7 @@ new Vue({
         changeIsPostMethod() { // RENAME THIS FUNCTION AFTER TESTS
             this.isPostMethod = !this.isPostMethod;
             this.serverResponse = '';
+            this.userInput.GETLectureID = '';
             this.isPutMethod = false;
         },
         async makePutMethod() {
@@ -129,21 +128,23 @@ new Vue({
                 .catch((err) => console.log(err));
         },
         makeDeleteMethod() {
-            this.urlForAPI = `/api/lectures/${this.userInput.DELETELectureID}`;
-            const data = {
-                id: this.userInput.DELETELectureID
+            if (!this.userInput.DELETELectureID) {
+                this.serverResponse = 'Please, enter lecture ID in DELETE input.';
+            } else {
+                this.urlForAPI = `/api/lectures/${this.userInput.DELETELectureID}`;
+                const data = {
+                    id: this.userInput.DELETELectureID
+                }
+                request(this.urlForAPI, 'DELETE', data)
+                    .then((res) => JSON.parse(JSON.stringify(res)))
+                    .then((data) => this.serverResponse = data)
+                    .catch((err) => console.log(err));
             }
-            //console.log(this.urlForAPI);
-            request(this.urlForAPI, 'DELETE', data)
-                .then((res) => JSON.parse(JSON.stringify(res)))
-                .then((data) => this.serverResponse = data)
-                .catch((err) => console.log(err));
         }
     },
     async mounted() {
         this.lecturesID = await request('/api/lectures');
         this.lecturers = await request('/api/lecturers');
         this.groups = await request('/api/groups');
-        console.log(this.lecturers);
     },
 });
