@@ -31,6 +31,7 @@ new Vue({
         userInput: {
             GETLectureID: '',
             PUTLectureID: '',
+            DELETELectureID: '',
             studentName: '',
         },
         formInput: {
@@ -59,6 +60,7 @@ new Vue({
                         this.serverResponse = 'Status code: 404';
                     } else {
                         this.serverResponse = data;
+                        this.userInput.GETLectureID = '';
                     }
                 })
                 .catch((err) => console.log(err));
@@ -88,6 +90,7 @@ new Vue({
         },
         changeIsPostMethod() { // RENAME THIS FUNCTION AFTER TESTS
             this.isPostMethod = !this.isPostMethod;
+            this.serverResponse = '';
             this.isPutMethod = false;
         },
         async makePutMethod() {
@@ -125,6 +128,17 @@ new Vue({
                 })
                 .catch((err) => console.log(err));
         },
+        makeDeleteMethod() {
+            this.urlForAPI = `/api/lectures/${this.userInput.DELETELectureID}`;
+            const data = {
+                id: this.userInput.DELETELectureID
+            }
+            //console.log(this.urlForAPI);
+            request(this.urlForAPI, 'DELETE', data)
+                .then((res) => JSON.parse(JSON.stringify(res)))
+                .then((data) => this.serverResponse = data)
+                .catch((err) => console.log(err));
+        }
     },
     async mounted() {
         this.lecturesID = await request('/api/lectures');

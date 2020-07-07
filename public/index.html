@@ -45,6 +45,13 @@
             <input type="text" class="form-control" placeholder="Enter ID lecture"
                    v-model="userInput.PUTLectureID" required>
         </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary" type="button" v-on:click="makeDeleteMethod">DELETE</button>
+            </div>
+            <input type="text" class="form-control" placeholder="Enter ID lecture"
+                   v-model="userInput.DELETELectureID" required>
+        </div>
         <form @submit.prevent="createPostMethod" v-if="isPostMethod">
             <div class="form-group">
                 <input type="text" class="form-control" id="theme" placeholder="Theme of lecture" v-model="formInput.theme" required>
