@@ -1,10 +1,15 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: `${__dirname}/../config/.env` });
 
 const Schema = mongoose.Schema;
 
 const lectureSchema = new Schema({
     theme: {
         type: String,
+        minlength: process.env.LECTURE_THEME_MIN,
+        maxlength: process.env.LECTURE_THEME_MAX,
         required: true,
     },
     lecturer: {
@@ -14,10 +19,11 @@ const lectureSchema = new Schema({
     },
     classroom: {
         type: Number,
+        min: 1,
         required: true,
     },
     group: {
-        type: Schema.Types.ObjectId,
+        type: [Schema.Types.ObjectId],
         ref: 'Group',
         required: true,
     },
