@@ -30,6 +30,7 @@ new Vue({
         lecturesID: [],
         lecturers: [],
         groups: [],
+        selectedGroups: [],
         serverResponseArray: [],
         userInput: {
             GETLectureID: '',
@@ -40,7 +41,8 @@ new Vue({
             theme: '',
             lecturer: '',
             classroom: '',
-            group: '',
+            group: [],
+            groupID: '',
             day: '',
             time: '',
         },
@@ -58,7 +60,11 @@ new Vue({
                             this.serverResponse = '';
                             this.serverResponseArray = data;
                         } else {
-                            this.serverResponse = data;
+                            if (data.length <= 0) {
+                                this.serverResponse = 'Lectures not found.'
+                            } else {
+                                this.serverResponse = data;
+                            }
                         }
                         this.userInput.GETLectureID = '';
                     }
@@ -71,21 +77,51 @@ new Vue({
             this.userInput.GETLectureID = '';
             this.isPutMethod = false;
         },
+        addGroup() {
+            let isGroupIDExist = false;
+            this.selectedGroups = [];
+            if (this.formInput.groupID.length < 1) {
+                return;
+            } else if (this.formInput.group.length === 0) {
+                this.formInput.group.push(this.formInput.groupID)
+            } else {
+                for (let i = 0; i < this.formInput.group.length; i++) {
+                    if (this.formInput.group[i] === this.formInput.groupID) {
+                        isGroupIDExist = true;
+                    }
+                }
+                if (!isGroupIDExist) {
+                    this.formInput.group.push(this.formInput.groupID)
+                }
+            }
+            this.handleSelectedGroups();
+        },
         createLecture() {
             const { ...lectureData } = this.formInput;
             request('/api/lectures', 'POST', lectureData)
-                .then(() => {
-                    this.serverResponse = 'Lecture created';
+                .then((res) => JSON.parse(JSON.stringify(res)))
+                .then((data) => {
+                    this.serverResponse = data;
                 })
                 .then(() => {
                     this.formInput.theme = '';
                     this.formInput.lecturer = '';
                     this.formInput.classroom = '';
-                    this.formInput.group = '';
+                    this.formInput.group = [];
                     this.formInput.day = '';
                     this.formInput.time = '';
                 })
                 .catch((err) => console.log(err));
+        },
+        handleSelectedGroups() {
+            // this.selectedGroups = [];
+            for (let i = 0; i < this.formInput.group.length; i++) {
+                for (let j = 0;  j < this.groups.length; j++) {
+                    if (this.formInput.group[i] === this.groups[j]._id) {
+                        this.selectedGroups.push(this.groups[j].name);
+                    }
+                }
+            }
         },
         handlePUT() {
             this.isPostMethod = false;
@@ -106,7 +142,6 @@ new Vue({
                             this.formInput.theme = data.theme;
                             this.formInput.lecturer = data.lecturer;
                             this.formInput.classroom = data.classroom;
-                            this.formInput.group = data.group;
                             this.formInput.day = data.day;
                             this.formInput.time = data.time;
                             this.isPutMethod = !this.isPutMethod;
@@ -121,6 +156,9 @@ new Vue({
             request(`/api/lectures/${this.userInput.PUTLectureID}`, 'PUT', lectureData)
                 .then(() => {
                     this.serverResponse = 'Changed';
+                    this.userInput.PUTLectureID = '';
+                    this.isPutMethod = false;
+                    this.selectedGroups = [];
                 })
                 .catch((err) => console.log(err));
         },
@@ -135,6 +173,7 @@ new Vue({
                 request(this.URL, 'DELETE', data)
                     .then((res) => JSON.parse(JSON.stringify(res)))
                     .then((data) => this.serverResponse = data)
+                    .then(() => this.userInput.DELETELectureID = '')
                     .catch((err) => console.log(err));
             }
         },

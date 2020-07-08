@@ -36,13 +36,19 @@
                     <option disabled value="">Select lecturer</option>
                     <option v-for="lecturer in lecturers" v-bind:value="lecturer._id">{{ lecturer.name }}</option>
                 </select>
+                <p v-else>Lectures not found</p>
+                <input type="number" class="form-control" id="classroom" placeholder="Classroom" v-model="formInput.classroom" required>
+                <div class="input-group mb-3" v-if="groups.length">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" v-on:click="addGroup">Add group</button>
+                    </div>
+                    <select class="custom-select" v-model="formInput.groupID" required>
+                        <option disabled value="">Select group</option>
+                        <option v-for="group in groups" v-bind:value="group._id">{{ group.name }}</option>
+                    </select>
+                </div>
                 <p v-else>Groups not found</p>
-                <input type="number" class="form-control" id="classroom" placeholder="Classroom" v-model="formInput.classroom">
-                <select class="custom-select" id="group" v-model="formInput.group" v-if="groups.length" required>
-                    <option disabled value="">Select group</option>
-                    <option v-for="group in groups" v-bind:value="group._id">{{ group.name }}</option>
-                </select>
-                <p v-else>Groups not found</p>
+                <p v-if="selectedGroups.length">Selected groups: {{ selectedGroups }}</p>
                 <select class="custom-select" id="day" v-model="formInput.day" required>
                     <option disabled value="">Select day</option>
                     <option value="Monday">Monday</option>
@@ -76,13 +82,19 @@
                     <option disabled value="">Select lecturer</option>
                     <option v-for="lecturer in lecturers" v-bind:value="lecturer._id">{{ lecturer.name }}</option>
                 </select>
-                <p v-else>Groups not found</p>
+                <p v-else>Lectures not found</p>
                 <input type="number" class="form-control" placeholder="Classroom" v-model="formInput.classroom">
-                <select class="custom-select" v-model="formInput.group" v-if="groups.length" required>
-                    <option disabled value="">Select group</option>
-                    <option v-for="group in groups" v-bind:value="group._id">{{ group.name }}</option>
-                </select>
+                <div class="input-group mb-3" v-if="groups.length">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" v-on:click="addGroup">Add group</button>
+                    </div>
+                    <select class="custom-select" v-model="formInput.groupID" required>
+                        <option disabled value="">Select group</option>
+                        <option v-for="group in groups" v-bind:value="group._id">{{ group.name }}</option>
+                    </select>
+                </div>
                 <p v-else>Groups not found</p>
+                <p v-if="selectedGroups.length">Selected groups: {{ selectedGroups }}</p>
                 <select class="custom-select" v-model="formInput.day" required>
                     <option disabled value="">Select day</option>
                     <option value="Monday">Monday</option>
